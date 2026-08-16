@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>波動・チャクラ診断70問｜あなたの"今"の状態を知る無料診断</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --bg:#ffffff;
+    --surface:#ffffff;
+    --surface-soft:#faf9f7;
+    --border:#ececec;
+    --text:#2b2b2b;
+    --text-soft:#8a8a8a;
+    --accent:#b8935a;
+    --accent-soft:#f5ede0;
+    --shadow:rgba(0,0,0,0.05);
+  }
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","游ゴシック体",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.8;
+    padding:24px 16px 80px;
+    min-height:100vh;
+  }
+  .container{ max-width:760px; margin:0 auto; }
+  .screen{ display:none; }
+  .screen.active{ display:block; animation:fadeIn .5s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  header{ text-align:center; margin-bottom:44px; padding-bottom:28px; border-bottom:1px solid var(--border); }
+  header .eyebrow{ letter-spacing:.2em; font-size:.72rem; color:var(--accent); font-weight:600; margin-bottom:10px; }
+  h1{ font-size:1.7rem; font-weight:700; color:var(--text); margin-bottom:12px; letter-spacing:.03em; }
+  .subtitle{ color:var(--text-soft); font-size:.9rem; }
+
+  .chakra-section{ margin-bottom:36px; }
+  .chakra-title{ font-size:1.02rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:10px; padding-bottom:12px; margin-bottom:14px; border-bottom:1px solid var(--border); }
+  .chakra-dot{ width:12px; height:12px; border-radius:50%; display:inline-block; flex:none; }
+  .chakra-theme{ font-weight:400; color:var(--text-soft); font-size:.82rem; }
+
+  .question-item{ display:flex; justify-content:space-between; align-items:center; gap:16px; padding:14px 4px; border-bottom:1px solid var(--surface-soft); }
+  .question-text{ flex:1; font-size:.92rem; color:var(--text); }
+  .toggle-buttons{ display:flex; gap:6px; flex:none; }
+  .toggle-btn{ padding:7px 18px; border:1px solid var(--border); background:var(--surface); border-radius:20px; cursor:pointer; font-weight:600; font-size:.8rem; color:var(--text-soft); transition:.2s; }
+  .toggle-btn:hover{ border-color:var(--accent); color:var(--accent); }
+  .toggle-btn.active{ background:var(--text); color:#fff; border-color:var(--text); }
+  .toggle-btn.active[data-value="yes"]{ background:var(--accent); border-color:var(--accent); }
+
+  .btn-primary{ width:100%; padding:16px; font-size:1rem; font-weight:700; border:none; border-radius:8px; cursor:pointer; margin-top:36px; background:var(--text); color:#fff; letter-spacing:.05em; transition:.2s; }
+  .btn-primary:hover{ background:var(--accent); }
+  .btn-secondary{ width:100%; padding:14px; font-size:.9rem; font-weight:600; border:1px solid var(--border); border-radius:8px; cursor:pointer; margin-top:14px; background:var(--surface); color:var(--text-soft); transition:.2s; }
+  .btn-secondary:hover{ border-color:var(--text); color:var(--text); }
+
+  .progress-hint{ text-align:center; font-size:.78rem; color:var(--text-soft); margin-top:10px; }
+
+  /* Result screen */
+  .result-header{ text-align:center; margin-bottom:36px; }
+  .result-header h1{ margin-bottom:6px; }
+
+  .verdict-card{ background:var(--surface-soft); border:1px solid var(--border); border-radius:14px; padding:36px 28px; margin-bottom:40px; text-align:left; }
+  .verdict-emoji{ font-size:2.2rem; display:block; text-align:center; margin-bottom:10px; }
+  .verdict-badge{ display:block; text-align:center; font-size:.72rem; letter-spacing:.15em; color:var(--accent); font-weight:700; margin-bottom:6px; }
+  .verdict-title{ text-align:center; font-size:1.3rem; font-weight:700; margin-bottom:20px; color:var(--text); }
+  .verdict-lead{ font-weight:700; font-size:1rem; margin-bottom:16px; text-align:center; }
+  .verdict-body{ font-size:.92rem; color:var(--text); white-space:pre-line; margin-bottom:18px; }
+  .verdict-cta{ font-size:.88rem; color:var(--text-soft); border-top:1px dashed var(--border); padding-top:16px; white-space:pre-line; }
+
+  .chart-container{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:24px; margin-bottom:24px; }
+  .chart-container svg{ display:block; margin:0 auto; max-width:100%; height:auto; }
+  .chart-caption{ text-align:center; font-size:.78rem; color:var(--text-soft); margin-top:8px; }
+
+  .chart-guide{ background:var(--accent-soft); border-radius:10px; padding:22px 24px; margin-bottom:44px; }
+  .chart-guide h3{ font-size:.98rem; margin-bottom:12px; color:var(--text); }
+  .chart-guide p{ font-size:.85rem; color:var(--text); margin-bottom:10px; }
+  .chart-guide .guide-scale{ font-size:.82rem; color:var(--text-soft); }
+  .chart-guide .guide-scale div{ padding:2px 0; }
+
+  .result-item{ margin-bottom:26px; padding:24px; background:var(--surface); border:1px solid var(--border); border-left:3px solid; border-radius:10px; }
+  .result-item-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--surface-soft); }
+  .result-item-title{ font-size:1.02rem; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .yes-count{ font-size:.8rem; padding:4px 12px; background:var(--surface-soft); border-radius:14px; font-weight:600; color:var(--text-soft); }
+  .diagnosis-text{ font-size:.88rem; color:var(--text); white-space:pre-line; }
+
+  .share-section{ margin:48px 0; padding:28px; background:var(--surface-soft); border-radius:12px; text-align:center; }
+  .share-section h2{ font-size:1rem; margin-bottom:18px; font-weight:700; }
+  .share-buttons{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; }
+  .share-btn{ padding:12px; border:none; border-radius:8px; font-weight:600; cursor:pointer; color:#fff; font-size:.85rem; transition:.2s; }
+  .share-btn.twitter{ background:#1da1f2; }
+  .share-btn.line{ background:#06c755; }
+  .share-btn.instagram{ background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .share-btn:hover{ opacity:.88; }
+
+  .cta-section{ margin-top:52px; }
+  .cta-section > .cta-lead{ text-align:center; font-size:.85rem; color:var(--text-soft); margin-bottom:20px; }
+  .cta-card{ display:block; text-decoration:none; border-radius:12px; padding:26px 24px; margin-bottom:16px; border:1px solid var(--border); transition:.2s; }
+  .cta-card:hover{ transform:translateY(-2px); box-shadow:0 8px 20px var(--shadow); }
+  .cta-card.primary{ background:var(--text); color:#fff; }
+  .cta-card.secondary{ background:var(--surface); color:var(--text); }
+  .cta-card .cta-kicker{ font-size:.7rem; letter-spacing:.15em; opacity:.7; margin-bottom:6px; font-weight:600; }
+  .cta-card .cta-check{ display:inline-block; font-size:.76rem; letter-spacing:.05em; color:#e53935; background:#fff; border:1px solid #e53935; border-radius:20px; padding:3px 12px; margin-bottom:10px; font-weight:700; }
+  .cta-card .cta-title{ font-size:1.08rem; font-weight:700; margin-bottom:6px; }
+  .cta-card.primary .cta-title{ color:#fff; }
+  .cta-card.secondary .cta-title{ color:var(--text); }
+  .cta-card .cta-desc{ font-size:.82rem; opacity:.85; }
+  .cta-card .cta-arrow{ display:inline-block; margin-top:12px; font-size:.82rem; font-weight:700; }
+  .cta-card.primary .cta-arrow{ color:var(--accent-soft); }
+  .cta-card.secondary .cta-arrow{ color:var(--accent); }
+
+  footer{ text-align:center; margin-top:20px; }
+
+  @media (max-width:600px){
+    .question-item{ flex-direction:column; align-items:flex-start; gap:10px; }
+    .toggle-buttons{ width:100%; justify-content:flex-end; }
+    .verdict-card{ padding:26px 18px; }
+    .result-item{ padding:18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div id="question-screen" class="screen active">
+    <header>
+      <div class="eyebrow">FREE DIAGNOSIS</div>
+      <h1>波動・チャクラ診断70問</h1>
+      <div class="subtitle">あなたの「今」の状態を知る、7つのチャクラ診断</div>
+    </header>
+    <div id="questions-container"></div>
+    <button id="submit-btn" class="btn-primary">診断する</button>
+    <div class="progress-hint">全70問・直感で答えてください</div>
+  </div>
+
+  <div id="result-screen" class="screen">
+    <div class="result-header">
+      <div class="eyebrow" style="color:var(--accent); font-size:.72rem; letter-spacing:.2em; font-weight:700; margin-bottom:10px;">DIAGNOSIS RESULT</div>
+      <h1>診断結果</h1>
+      <div class="subtitle">あなたの波動バランスを紐解きます</div>
+    </div>
+
+    <div id="verdict-container"></div>
+
+    <div class="chart-container">
+      <div id="chart-svg-container"></div>
+      <div class="chart-caption">図が外側に広がっているほど、そのチャクラのゆらぎが大きいことを示します</div>
+    </div>
+
+    <div class="chart-guide">
+      <h3>📊 チャクラ診断の見方</h3>
+      <p>レーダーチャート（七角形）が大きく外側に広がっている人ほど、波動の調整が必要な状態です。理想は、図形が中心に近いコンパクトな形になること。極端にYESが多い項目はあなたの課題を、YESが少ない項目はすでに活かせている長所を表しています。</p>
+      <div class="guide-scale">
+        <div>・YESが3個以上 → そのチャクラが少し乱れている可能性</div>
+        <div>・YESが6個以上 → そのチャクラがかなり乱れている可能性</div>
+        <div>・YESが10個全部 → そのチャクラがほとんど機能していない可能性</div>
+      </div>
+    </div>
+
+    <div id="results-container"></div>
+
+    <div class="share-section">
+      <h2>診断結果をシェアする</h2>
+      <div class="share-buttons">
+        <button class="share-btn twitter" onclick="shareTwitter()">Xでシェア</button>
+        <button class="share-btn line" onclick="shareLine()">LINEでシェア</button>
+        <button class="share-btn instagram" onclick="shareInstagram()">Instagramでシェア</button>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="cta-lead">あなたの波動タイプに合わせて、次の一歩をご案内します</div>
+      <div id="cta-container"></div>
+    </div>
+
+    <button id="restart-btn" class="btn-secondary">もう一度診断する</button>
+    <footer></footer>
+  </div>
+
+</div>
+
+<script>
+// ===== データ =====
+const QUESTIONS = {
+    chakra1: ["「面倒くさい」が口癖", "やる気がおきない", "人生から逃げ出したくなる", "体力に自信がない", "酒癖が悪い", "無気力・鬱っぽい", "慢性的に疲れている", "足に問題がある", "貧血である", "免疫系の疾患がある"],
+    chakra2: ["情緒不安定である", "お金に対して罪悪感がある", "性に対して罪悪感がある", "便秘又は下痢気味である", "性生活が乱れている", "拒食又は過食気味である", "腰が弱い", "子宮や性器に問題があった", "恋愛すると良いことがない", "膀胱に問題がある"],
+    chakra3: ["自分に自信がない", "怒りっぽい", "勝ち負けにこだわる", "批判や嫉妬が多い", "孤立状態である", "胃腸炎になりやすい", "優柔不断である", "アレルギー体質である", "よく胃が痛くなる", "消化器系に問題がある"],
+    chakra4: ["空気が読めないとよく言われる", "他人の気持ちに鈍い", "他人の問題に首を突っ込む", "人見知りが激しい", "リラックスする時間がない", "恋愛がいつもうまくいかない", "ドライと言われる", "肩こりがひどい", "呼吸器系に問題がある", "人を頼れない"],
+    chakra5: ["どもりやすい", "のどに違和感がある", "声を出すのが苦手", "自分の意見が言えない", "人の話を聞くのが苦手", "誤解されやすいとよく言われる", "よく咳がでる", "首に問題がある", "耳に問題がある", "甲状腺に問題がある"],
+    chakra6: ["冷静に物事を判断するのが苦手", "イメージすることが苦手", "人に騙されやすい", "常に考えを巡らせている", "頭痛もちである", "弱視である", "貧乏くじをひくことが多い", "物忘れが激しい", "いつも眠い", "頭を使う仕事が苦手"],
+    chakra7: ["空想、妄想に走りやすい", "過去や未来が気がかり", "幻覚を見る", "偏頭痛もちである", "霊感が強い", "孤独である", "貧乏なのに奢る", "常に疲れている", "占いを信じやすい", "精神世界や宗教に答えを求めがち"]
+};
+
+const CHAKRA_INFO = {
+    chakra1: { name: "第1チャクラ", short:"第1", color: "#e0736b", theme: "基盤・生存・行動力" },
+    chakra2: { name: "第2チャクラ", short:"第2", color: "#e8975a", theme: "感情・創造性・性" },
+    chakra3: { name: "第3チャクラ", short:"第3", color: "#e0b84f", theme: "自信・パワー・自己価値" },
+    chakra4: { name: "第4チャクラ", short:"第4", color: "#6fb98f", theme: "愛・癒し・受け取る力" },
+    chakra5: { name: "第5チャクラ", short:"第5", color: "#5c9fd6", theme: "表現・コミュニケーション" },
+    chakra6: { name: "第6チャクラ", short:"第6", color: "#7c8fd8", theme: "直感・洞察力・ビジョン" },
+    chakra7: { name: "第7チャクラ", short:"第7", color: "#a08cd0", theme: "精神性・統合・宇宙意識" }
+};
+
+const DIAGNOSIS_TEXT = {
+    chakra1: {
+        level0: "【恋愛】今は心が安定していて、自分らしく相手と向き合えています。不安に振り回されることなく、自然体でいられる時期です。\n\n【お金】お金の心配が少なく、落ち着いて生活できています。必要なものに使えていて、バランスが取れています。\n\n【心と体】気持ちが穏やかで、日々を楽しめています。やりたいことに向かって、自分のペースで進めています。\n\n【波動】根っこのエネルギーがしっかりしていて、生命力が満ちています。地に足がついた状態です。\n\n【改善ポイント】今のバランスを保つことを意識しましょう。疲れたら無理せず休むことが大切です。",
+        level1: "【恋愛】少し不安になりやすく、相手の気持ちが気になってしまう時期です。「どう思われているかな」と考えすぎてしまうことがあるかもしれません。\n\n【お金】お金のことが気になって、やりたいことを後回しにしてしまうことがあります。「今じゃないかも」と躊躇してしまいがちです。\n\n【心と体】気持ちが少し重く、疲れやすくなっています。小さなことでも負担に感じることがあるかもしれません。\n\n【波動】エネルギーが少し弱まっていて、元気が出にくい状態です。\n\n【改善ポイント】小さな「できた」を積み重ねることで、元気を取り戻せます。無理せず、できることから始めましょう。",
+        level2: "【恋愛】不安が大きくなっていて、相手に合わせすぎてしまっています。「嫌われたくない」という気持ちが強く、自分を出せずにいます。\n\n【お金】お金の心配が強く、行動にブレーキがかかっています。「お金がないから」という理由で、可能性を諦めてしまうことがあります。\n\n【心と体】気持ちの浮き沈みが激しく、何をしても疲れてしまいます。朝起きるのがつらいと感じることも多いでしょう。\n\n【波動】エネルギーが漏れていて、やる気が続きません。生命力が弱まっています。\n\n【改善ポイント】まずはしっかり休むことが必要です。無理に頑張らず、エネルギーを取り戻すことを優先しましょう。",
+        level3: "【恋愛】自分を大切にできず、相手に頼りすぎてしまっています。不安が強くて、相手の反応ばかり気にしてしまいます。\n\n【お金】お金の不安がとても大きく、心が重くなっています。「お金がない」という気持ちが、全ての判断に影響しています。\n\n【心と体】何もかもがしんどく、気持ちが休まりません。生きること自体が重く感じられます。\n\n【波動】エネルギーがとても弱くなっています。本来の力が使えていない状態です。\n\n【改善ポイント】土台をしっかり整えることで、人生が変わります。まずは安心できる環境を作ることから始めましょう。"
+    },
+    chakra2: {
+        level0: "【恋愛】感情が安定していて、自分の気持ちを大切にできています。相手に振り回されず、健全な距離感で愛を楽しめています。\n\n【お金】自分にお金を使うことに抵抗がなく、豊かさを受け取れています。お金の流れがスムーズです。\n\n【心と体】感情が豊かで、喜びも悲しみも自然に感じられています。心が軽やかです。\n\n【波動】感情のエネルギーが流れていて、創造性が高まっています。\n\n【改善ポイント】このバランスを保ちましょう。感情を押し込めず、表現し続けることが大切です。",
+        level1: "【恋愛】気持ちが揺れやすく、相手の反応で一喜一憂してしまいます。「愛されているかな」と不安になることがあります。\n\n【お金】自分にお金を使うことに罪悪感を感じやすいです。「私なんかに」と思ってしまうことがあるかもしれません。\n\n【心と体】悲しみや寂しさを溜め込みがちです。感情を外に出せず、内側に抱えています。\n\n【波動】感情のエネルギーが少し疲れています。創造性が弱まっています。\n\n【改善ポイント】自分のための時間を作りましょう。感情を我慢せず、少しずつ表現していくことが大切です。",
+        level2: "【恋愛】相手に尽くしすぎたり、離れられなくなったりしています。相手に依存して、「この人がいないとダメ」と思ってしまいます。\n\n【お金】豊かさを受け取れず、人に奪われる流れになっています。「私はもらう価値がない」と思い込んでいます。\n\n【心と体】気持ちが乱れやすく、自分を責めてしまいます。感情が爆発したり、逆に何も感じなくなったりします。便秘や下痢、腰痛、生殖器系の問題が出やすい状態です。\n\n【波動】感情のエネルギーが弱っています。創造性が止まり、楽しさを感じにくくなっています。\n\n【改善ポイント】自分の気持ちを後回しにしないことが大切です。まずは自分を満たしましょう。創造的な趣味（絵画、音楽、ダンス）、オレンジ色の食べ物（みかん、にんじん）を取り入れ、腰回しの運動を毎日行うと良いでしょう。",
+        level3: "【恋愛】愛よりも「埋めたい気持ち」で恋をしてしまい、苦しくなっています。相手に全てを捧げて、自分が空っぽになっています。\n\n【お金】お金の不安がとても強く、愛とお金が混ざってしまっています。バランスが崩れています。\n\n【心と体】誰にも言えない寂しさを抱えています。感情が枯れていて、何も感じなくなっています。腰痛、便秘や下痢の慢性化、生殖器系・腎臓・膀胱の問題が深刻化しやすい状態です。\n\n【波動】感情のエネルギーが完全に疲れています。乾いた状態です。\n\n【改善ポイント】自分を守ることが最優先です。そこから恋もお金も回復していきます。まずは自分を大切にしましょう。感情解放のセラピー、水分を多めに摂取、骨盤底筋の運動、創造的な表現活動（日記、アート、ダンス）を日常に取り入れてください。"
+    },
+    chakra3: {
+        level0: "【恋愛】自分に自信があり、対等な関係を築けています。相手に合わせすぎず、自分の意見もしっかり言えます。\n\n【お金】自分の価値を理解していて、正当な報酬を受け取れています。自信を持って行動できます。\n\n【心と体】気持ちが強く、やりたいことに向かって動けています。自己否定が少ない状態です。\n\n【波動】パワフルで行動力があります。自分の軸がしっかりしています。\n\n【改善ポイント】この自信を保ちましょう。時々、自分を振り返る時間を持つことが大切です。",
+        level1: "【恋愛】相手に合わせすぎて、自分の希望を言えないことがあります。「嫌われたくない」という気持ちが先に立ってしまいます。\n\n【お金】自信が持てず、行動に移しにくいです。「どうせ私なんか」と思ってしまうことがあります。\n\n【心と体】気持ちが弱って、やりたいことにブレーキがかかっています。自己否定の気持ちが出てきます。\n\n【波動】本来の行動力が弱まっています。エネルギーの火が小さくなっています。\n\n【改善ポイント】小さな挑戦を一つしてみましょう。成功体験が自信を取り戻す助けになります。",
+        level2: "【恋愛】「選ばれない恋」が続きやすくなっています。自信が揺らいでいる証拠です。「私なんかが愛されるわけがない」と思い込んでいます。\n\n【お金】自分の価値を低く見積もって、損な役割を引き受けてしまいます。「これくらいが妥当」と自分を安く扱っています。\n\n【心と体】怒りやイライラ、落ち込みが出やすくなっています。自分にも他人にも厳しくなりがちです。胃痛や消化不良、アレルギー症状が出やすくなります。\n\n【波動】エネルギーの火が弱まっています。パワーが使えていない状態です。\n\n【改善ポイント】自己否定を手放す練習が必要です。自分を責めるのをやめましょう。太陽光を浴びる、黄色い食べ物（バナナ、レモン）を食べる、腹式呼吸を1日10分、成功日記をつけることが効果的です。",
+        level3: "【恋愛】「自分は愛されない」と強く思い込んでいて、本気で愛してくれる人を避けてしまいます。ダメな相手ばかり選んでしまいます。\n\n【お金】自己価値の低さが、収入や流れを止めています。「私には価値がない」という思い込みが全てに影響しています。\n\n【心と体】自分の力を完全に見失っています。何をやってもダメだと思い込んでいます。胃潰瘍、消化器系疾患、深刻なアレルギー症状が現れやすい状態です。\n\n【波動】エネルギーの火が消えています。行動力がゼロの状態です。\n\n【改善ポイント】ここが整うと、人生が大きく変わります。自分の価値を認めることがスタートです。自己肯定感を高めるセラピー、毎日の腹式呼吸瞑想15分、小さな成功体験を積み重ねる、黄色い服を着て自信を高める工夫をしてください。"
+    },
+    chakra4: {
+        level0: "【恋愛】与えることも受け取ることもバランスが取れています。健全な愛を楽しめている状態です。\n\n【お金】お金を受け取ることに抵抗がなく、豊かさが流れています。\n\n【心と体】心が開いていて、人との繋がりを楽しめています。孤独を感じません。\n\n【波動】愛のエネルギーが循環していて、癒しの力があります。\n\n【改善ポイント】このバランスを保ちましょう。与えすぎないように注意することも大切です。",
+        level1: "【恋愛】相手に尽くしすぎて疲れやすくなっています。「愛したい」という気持ちが強く、バランスが崩れています。\n\n【お金】人に使いすぎて、自分の分が減っています。「自分にお金を使うのは贅沢」と思ってしまいます。\n\n【心と体】優しさが裏目に出て、しんどくなっています。人の気持ちを背負いすぎています。\n\n【波動】愛のエネルギーが外に漏れています。自分が空っぽになりかけています。\n\n【改善ポイント】境界線を作りましょう。自分を満たすことを優先してください。",
+        level2: "【恋愛】片想いや都合のいい存在になりがちです。相手に尽くしても、返ってきません。バランスが大きく崩れています。\n\n【お金】見返りがなく、損ばかりに感じます。「私が我慢すればいい」と思ってしまいます。\n\n【心と体】人の気持ちを背負って潰れそうです。自分の気持ちが分からなくなっています。肩こり、胸の詰まり、血行不良が見られます。\n\n【波動】愛のエネルギーが枯れてきています。一方的に流れ出ています。\n\n【改善ポイント】愛される側になる練習が必要です。受け取ることを学びましょう。ハートを開く瞑想、緑色の食べ物（ほうれん草、抹茶）を食べる、胸を開くヨガ、感謝の日記をつけることが有効です。",
+        level3: "【恋愛】愛を与えすぎて、心が空っぽになっています。「愛されない=価値がない」と思い込み、さらに尽くしてしまいます。\n\n【お金】愛の代わりにお金で埋めようとして、苦しくなっています。バランスが完全に崩れています。\n\n【心と体】孤独感がとても強いです。誰にも理解されていないと感じています。肺や心臓の問題、深刻な肩こり、血行障害が現れやすい状態です。\n\n【波動】愛のエネルギーが完全に枯れています。\n\n【改善ポイント】まず自分の心を満たすことが最優先です。自分を愛することから始めましょう。自己愛を育てるセラピー、毎日のセルフハグ、深呼吸瞑想20分、森林浴、愛と感謝のアファメーションを実践してください。"
+    },
+    chakra5: {
+        level0: "【恋愛】本音が言えて、相手に伝わっています。誤解が少なく、スムーズなコミュニケーションができています。\n\n【お金】自分の価値を正しく表現でき、評価が上がっています。交渉力があります。\n\n【心と体】言いたいことが言えて、ストレスが溜まりません。自己表現ができています。\n\n【波動】声のエネルギーが強く、言葉に力があります。\n\n【改善ポイント】このバランスを保ちましょう。言いすぎにも注意が必要です。",
+        level1: "【恋愛】本音が言えず、相手に伝わっていません。「言ったら嫌われる」と思って、飲み込んでしまいます。\n\n【お金】自分の価値を表現できず、評価が上がりにくいです。言いたいことが言えません。\n\n【心と体】本音をしまい込んで疲れています。言えないストレスが溜まっています。喉の違和感や首のこりを感じることがあります。\n\n【波動】声のエネルギーが弱っています。詰まっている感じがあります。\n\n【改善ポイント】短い本音から練習しましょう。小さなことから「言う」を始めてください。カラオケで大声で歌う、朝の発声練習、首回しストレッチが効果的です。",
+        level2: "【恋愛】誤解されやすく、うまくいかない流れになっています。言いたいことが言えず、相手に伝わりません。「どうせ分かってもらえない」と諦めています。\n\n【お金】自分を安く扱ってしまいます。価値を言葉にできず、評価が低いままです。\n\n【心と体】言えないストレスがたくさん溜まっています。喉が詰まるような感覚があります。首や肩の慢性的な痛み、甲状腺の不調が出やすい状態です。\n\n【波動】詰まりが強く、エネルギーが流れていません。\n\n【改善ポイント】言葉を取り戻す必要があります。本音を言う練習をしましょう。毎日5分の日記で本音を書き出す、カラオケで感情を込めて歌う、青い食べ物（ブルーベリー等）を摂ることが助けになります。",
+        level3: "【恋愛】本音が消えて、相手の言いなりになっています。「私の気持ちなんてどうでもいい」と思い込み、声を失っています。\n\n【お金】価値が伝わらず、収入が止まっています。自分を表現できないので、評価されません。\n\n【心と体】自分が何を感じているのか分からなくなっています。感情と言葉が切り離されています。甲状腺・扁桃腺を痛めやすく、寝違えや頸椎、筋の痛みが多くなる傾向があります。\n\n【波動】声のエネルギーが完全に止まっています。閉じている状態です。\n\n【改善ポイント】本音が人生を立て直す鍵です。まずは「感じる」ことから始めましょう。毎日カラオケで感情を解放する、首のマッサージ、声を出す瞑想（マントラ）、安心できる相手に少しずつ本音を話す練習が重要です。"
+    },
+    chakra6: {
+        level0: "【恋愛】相手を見抜く力があり、危ない人を避けられています。直感が冴えています。\n\n【お金】未来を読む力があり、正しい判断ができています。チャンスを逃しません。\n\n【心と体】視野が広く、冷静に物事を見られています。思い込みが少ないです。\n\n【波動】直感が鋭く、ビジョンが明確な状態です。\n\n【改善ポイント】この直感を信じ続けましょう。論理に流されないように注意してください。",
+        level1: "【恋愛】相手の気持ちが読みづらくなっています。直感が鈍って、「この人で大丈夫かな」と不安になります。\n\n【お金】未来がぼやけて、決断が遅れます。「今じゃない」と先延ばしにしてしまいます。\n\n【心と体】考えても答えが出ません。視野が狭まっています。\n\n【波動】直感が弱まっています。視野が少し狭くなっています。\n\n【改善ポイント】心を落ち着ける時間が必要です。静かな時間を持ちましょう。",
+        level2: "【恋愛】危ない相手を「運命」と勘違いしやすくなっています。直感が狂って、ダメな人を選んでしまいます。「この人しかいない」と思い込みます。\n\n【お金】不安が大きくなって、悪い未来を決めつけてしまいます。「どうせうまくいかない」という思い込みが強いです。\n\n【心と体】思い込みに飲まれやすくなっています。妄想と現実の区別がつきにくいです。頭痛、物忘れ、視力低下が見られることがあります。\n\n【波動】霧がかかったように鈍くなっています。直感が使えていません。\n\n【改善ポイント】直感を取り戻す準備が必要です。情報を整理して、冷静になりましょう。第三の目を活性化する瞑想、紫色の食べ物（ブルーベリー、紫キャベツ）を摂取、デジタルデトックス、静かな環境で内観する時間を作ることが効果的です。",
+        level3: "【恋愛】誰を信じたらいいか分からず、迷い続けています。直感が完全に狂って、危険な人に引っかかりやすくなっています。\n\n【お金】判断が全部ズレて、悪い流れに入っています。「どうせ私には無理」という思い込みが全てを止めています。\n\n【心と体】考えすぎて心が壊れそうです。妄想と現実がごちゃごちゃになっています。慢性的な頭痛、視力の問題、重度の物忘れや集中力低下が起こりやすくなります。\n\n【波動】完全に迷子になっています。直感が死んでいる状態です。\n\n【改善ポイント】直感を取り戻すことが人生を立て直す鍵です。まずは情報をシャットアウトして、静かになりましょう。専門家のガイダンスを受けながら、毎日20分の瞑想、デジタルデトックス、直感日記（夢や予感を記録）、藍色や紫色の環境を整えることが重要です。"
+    },
+    chakra7: {
+        level0: "【恋愛】精神と現実のバランスが取れています。地に足がついた恋愛ができています。\n\n【お金】精神性と現実的な豊かさの両方を大切にできています。バランスが良いです。\n\n【心と体】穏やかで、不安が少ないです。宇宙を信頼しています。\n\n【波動】精神性が高く、統合されている状態です。\n\n【改善ポイント】このバランスを保ちましょう。現実を忘れないように注意してください。",
+        level1: "【恋愛】相手に期待しすぎて疲れやすくなっています。理想が高く、現実とのギャップに苦しみます。\n\n【お金】現実的な判断が少し弱まっています。「お金より大切なものがある」と思い込み、現実を見ていません。\n\n【心と体】ふわふわして落ち着きません。地に足がついていない感覚があります。\n\n【波動】精神が強すぎて、現実が弱くなっています。バランスが崩れています。\n\n【改善ポイント】地に足を戻しましょう。現実を見ることが大切です。",
+        level2: "【恋愛】相手にのめり込んで、気持ちが暴走しやすくなっています。「この人が全て」と思い込み、現実が見えなくなっています。\n\n【お金】極端に使いすぎたり、節約しすぎたりしています。現実的な判断ができず、バランスが崩れています。\n\n【心と体】不安が大きくなって、妄想が強くなっています。「宇宙が何とかしてくれる」と現実から逃げています。偏頭痛、不眠、極度の疲労感が現れることがあります。\n\n【波動】精神が現実を上回って、バランスが崩壊しています。地に足がついていません。\n\n【改善ポイント】現実の感覚を取り戻しましょう。スピリチュアルに逃げないことが大切です。グラウンディング運動（裸足で土の上を歩く）、現実的な目標設定、家計簿をつける、白や紫の食べ物（白米、大根）を食べることが役立ちます。",
+        level3: "【恋愛】気持ちが重くなりすぎて、自分も相手も苦しくなっています。「運命の人」などの言葉に縛られて、現実が見えなくなっています。\n\n【お金】現実がついてこず、焦りだけが増えています。「お金なんて」と言いながら、内心は不安でいっぱいです。\n\n【心と体】孤独感がとても強いです。誰にも理解されないと感じています。慢性的な偏頭痛、重度の疲労、睡眠障害、精神的な混乱が深刻化しやすい状態です。\n\n【波動】頭のエネルギーが強すぎて暴走しています。現実との繋がりが切れています。\n\n【改善ポイント】地に戻ることで人生が立て直ります。スピリチュアルを手放して、現実を見ましょう。カウンセリングやセラピーを受ける、毎日30分のグラウンディング瞑想、具体的な行動計画を立てる、土に触れる園芸作業、現実的なコミュニティに参加することが重要です。"
+    }
+};
+
+// 総合鑑定タイプ（バーナム効果を意識した鑑定文）
+const FORTUNE_TEXT = {
+    A1: {
+        badge: "直感覚醒タイプ",
+        emoji: "🔮",
+        title: "占い師・カウンセラーの才能タイプ",
+        lead: "あなたの波動には、他の人にはない特別な感度が宿っています。",
+        body: "チェック項目を見ると、第6チャクラ（直感・洞察力）と第7チャクラ（精神性・直感力）の反応が、他のチャクラに比べて際立って高く出ています。これは単なる「乱れ」ではなく、目に見えないエネルギーや人の感情の機微を、人一倍敏感にキャッチできる感受性の強さの表れです。\n\n表面的には物事に流されているように見えても、実はふとした瞬間に「あ、これはこうなる」という予感が当たったり、初対面の人の本質を一瞬で見抜いてしまったりすることはありませんか。それは偶然ではなく、あなたの中に眠る「視る力」が、少しずつ目を覚まし始めているサインです。\n\nこのタイプの方は、自分自身のことよりも、他人の悩みや未来のほうがクリアに見えてしまう傾向があります。裏を返せば、その力の使い方をきちんと学べば、占い師やヒーラー、カウンセラーとして人に道を示す才能を、これから存分に発揮できる段階に来ているといえるでしょう。",
+        cta: "この「視る力」を体系立てて磨いていくと、感覚だけに頼らず、誰が見ても納得できる形でお伝えできるようになります。次のステップとして、波動タロット講座であなたの直感を「技術」に変えてみませんか。"
+    },
+    A2: {
+        badge: "生まれつきの霊感体質タイプ",
+        emoji: "✨",
+        title: "占い師・ヒーラーの才能タイプ",
+        lead: "あなたはもともと、見えない世界と縁が深い体質を持っています。",
+        body: "第6・第7チャクラの反応が突出して高く、しかも他のチャクラよりも明らかに優勢な状態です。これは、生まれつき直感や感受性が強く、場の空気や人のエネルギーの変化を敏感に察知してしまうタイプに共通する傾向です。\n\n「なんとなく嫌な予感がして避けたら、本当にトラブルだった」「初対面なのに、なぜか相手の考えていることが分かってしまう」——そんな経験に、心当たりがあるのではないでしょうか。周りからは「考えすぎ」「気にしすぎ」と言われることもあるかもしれませんが、それはあなたの感覚が人より鋭いだけで、間違っているわけではありません。\n\nただし、感覚が強い分、他人のエネルギーや不安を無意識に受け取りすぎて疲れやすいという側面もあります。この力を「才能」として活かすか、「生きづらさ」のまま抱え続けるかは、扱い方を知っているかどうかの差にすぎません。",
+        cta: "その鋭い感覚は、正しい扱い方を学ぶことで、あなた自身はもちろん、あなたの周りの人を導く大きな力に変わります。波動タロット講座で、その才能を安全に、そして確実に開花させていきましょう。"
+    }
+};
+
+const WAVE_TEXT = {
+    mild: {
+        badge: "波動ゆらぎ・軽度タイプ",
+        emoji: "🌤️",
+        title: "要・波動調整タイプ（軽度）",
+        lead: "全体的には落ち着いているものの、心の奥に小さな「ゆらぎ」のサインが出ています。",
+        body: "チェックされた項目は多くありませんが、だからこそ見逃されがちな「初期のサイン」が出ているタイプです。普段は問題なく過ごせていても、ふとした瞬間に理由のわからない疲れや焦り、小さな違和感を感じることはありませんか。\n\nこの段階の乱れは、本人が「大丈夫」と思い込みやすいのが特徴です。しかし波動は、小さなゆらぎを放っておくと、少しずつ本来のあなたらしさや直感の精度、人間関係の巡りに影響を及ぼしていきます。逆に言えば、今このタイミングで整えることができれば、最小限の負担で本来のポテンシャルを取り戻せる、いちばん「お得」な状態でもあります。",
+        cta: "今のうちに波動を整えておくことで、これから訪れるチャンスをより多く、よりスムーズに掴めるようになります。まずは公式サイトで、あなたに合った波動調整の方法をチェックしてみてください。"
+    },
+    moderate: {
+        badge: "波動ゆらぎ・中度タイプ",
+        emoji: "🌥️",
+        title: "要・波動調整タイプ（中度）",
+        lead: "頑張り屋なあなたほど、無理を重ねてエネルギーが乱れやすい状態です。",
+        body: "複数のチャクラにわたってチェックが入っており、心と体、そしてエネルギーのバランスが崩れかけているサインが出ています。人前では明るく振る舞っていても、家に帰るとどっと疲れが出たり、「本当はもっと評価されてもいいはずなのに」と感じることはありませんか。\n\nこのタイプの方は、責任感が強く、自分のことより周りを優先してしまう傾向があります。そのため、気づかないうちにエネルギーを消耗し、本来の魅力や運の巡りが発揮されにくくなっているのです。ただ、これは「あなたが弱いから」ではなく、頑張りすぎた証拠。整え方さえ知れば、驚くほど早く本来の状態に戻れるタイプでもあります。",
+        cta: "今のあなたに必要なのは、頑張ることではなく「整えること」。公式サイトで、あなたの状態に合わせた波動調整のメニューを確認してみてください。"
+    },
+    severe: {
+        badge: "波動ゆらぎ・重度タイプ",
+        emoji: "🌧️",
+        title: "要・波動調整タイプ（重度）",
+        lead: "かなり多くのサインが出ています。今が、立て直しどきです。",
+        body: "多くのチャクラにわたってチェック項目が出ており、心・体・エネルギーのあらゆる面で、本来のあなたの力が発揮しづらい状態が続いていると考えられます。「何をしても上手くいかない」「頑張っているのに報われない」——そんな感覚を、ここ最近何度も感じているのではないでしょうか。\n\nこの状態は、決して珍しいことではありません。真面目で我慢強い人ほど、限界まで気づかずに頑張り続けてしまい、結果として波動が大きく乱れてしまうケースは非常に多く見られます。ただ、乱れが大きいということは、それだけ「整えたときの変化も大きい」ということ。今の状態を放置せず、しっかりと向き合うことで、恋愛・お金・人間関係のすべてが好転していく可能性を秘めています。",
+        cta: "一人で抱え込まず、まずは専門的な視点から今のあなたの波動を見てもらうことをおすすめします。公式サイトから、詳しい波動調整の方法をご確認ください。"
+    }
+};
+
+let answers = {};
+let results = {};
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderQuestions();
+    setupEventListeners();
+});
+
+function renderQuestions() {
+    const container = document.getElementById('questions-container');
+    Object.keys(QUESTIONS).forEach(chakraKey => {
+        const info = CHAKRA_INFO[chakraKey];
+        const questions = QUESTIONS[chakraKey];
+        const section = document.createElement('div');
+        section.className = 'chakra-section';
+        section.innerHTML = `
+            <div class="chakra-title">
+                <span class="chakra-dot" style="background:${info.color}"></span>
+                ${info.name}<span class="chakra-theme">（${info.theme}）</span>
+            </div>
+            <div id="${chakraKey}-questions"></div>
+        `;
+        container.appendChild(section);
+        const qc = document.getElementById(`${chakraKey}-questions`);
+        questions.forEach((q, i) => {
+            const id = `${chakraKey}_${i}`;
+            const item = document.createElement('div');
+            item.className = 'question-item';
+            item.innerHTML = `
+                <span class="question-text">${q}</span>
+                <div class="toggle-buttons">
+                    <button class="toggle-btn" data-question="${id}" data-value="no">NO</button>
+                    <button class="toggle-btn" data-question="${id}" data-value="yes">YES</button>
+                </div>
+            `;
+            qc.appendChild(item);
+        });
+    });
+}
+
+function setupEventListeners() {
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('toggle-btn')) {
+            const id = e.target.dataset.question;
+            document.querySelectorAll(`[data-question="${id}"]`).forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            answers[id] = e.target.dataset.value;
+        }
+    });
+
+    document.getElementById('submit-btn').addEventListener('click', () => {
+        if (Object.keys(answers).length < 70) {
+            alert('全ての質問に回答してください');
+            return;
+        }
+        calculateResults();
+        showResults();
+    });
+
+    document.getElementById('restart-btn').addEventListener('click', () => {
+        answers = {};
+        results = {};
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        showScreen('question-screen');
+        window.scrollTo(0, 0);
+    });
+}
+
+function calculateResults() {
+    results = {};
+    Object.keys(QUESTIONS).forEach(chakraKey => {
+        const yesCount = Object.keys(answers).filter(k => k.startsWith(chakraKey) && answers[k] === 'yes').length;
+        let level;
+        if (yesCount <= 2) level = 'level0';
+        else if (yesCount <= 5) level = 'level1';
+        else if (yesCount <= 9) level = 'level2';
+        else level = 'level3';
+        results[chakraKey] = { yesCount, level, diagnosis: DIAGNOSIS_TEXT[chakraKey][level] };
+    });
+}
+
+function determineVerdict() {
+    const keys = Object.keys(CHAKRA_INFO);
+    const counts = {};
+    keys.forEach(k => counts[k] = results[k].yesCount);
+    const total = keys.reduce((s, k) => s + counts[k], 0);
+    const combined67 = counts.chakra6 + counts.chakra7;
+    const sorted = keys.slice().sort((a, b) => counts[b] - counts[a]);
+    const top2 = sorted.slice(0, 2);
+    const is67Leaning = top2.includes('chakra6') && top2.includes('chakra7');
+
+    if (is67Leaning && combined67 >= 8) {
+        return { type: 'fortune', data: combined67 >= 14 ? FORTUNE_TEXT.A2 : FORTUNE_TEXT.A1 };
+    }
+    let sev = 'mild';
+    if (total >= 35) sev = 'severe';
+    else if (total >= 20) sev = 'moderate';
+    return { type: 'wave', data: WAVE_TEXT[sev] };
+}
+
+function showResults() {
+    // 総合鑑定
+    const verdict = determineVerdict();
+    const v = verdict.data;
+    document.getElementById('verdict-container').innerHTML = `
+        <div class="verdict-card">
+            <span class="verdict-emoji">${v.emoji}</span>
+            <span class="verdict-badge">${v.badge}</span>
+            <div class="verdict-title">${v.title}</div>
+            <div class="verdict-lead">${v.lead}</div>
+            <div class="verdict-body">${v.body}</div>
+            <div class="verdict-cta">${v.cta}</div>
+        </div>
+    `;
+
+    // レーダーチャート
+    const labels = Object.keys(CHAKRA_INFO).map(k => CHAKRA_INFO[k].short);
+    const colors = Object.keys(CHAKRA_INFO).map(k => CHAKRA_INFO[k].color);
+    const data = Object.keys(results).map(k => results[k].yesCount);
+    document.getElementById('chart-svg-container').innerHTML = buildRadarSVG(data, labels, colors);
+
+    // チャクラ別結果
+    const rc = document.getElementById('results-container');
+    rc.innerHTML = '';
+    Object.keys(results).forEach(k => {
+        const info = CHAKRA_INFO[k];
+        const r = results[k];
+        const item = document.createElement('div');
+        item.className = 'result-item';
+        item.style.borderLeftColor = info.color;
+        item.innerHTML = `
+            <div class="result-item-header">
+                <div class="result-item-title" style="color:${info.color}">
+                    <span class="chakra-dot" style="background:${info.color}"></span>${info.name}
+                </div>
+                <div class="yes-count">YES: ${r.yesCount}個</div>
+            </div>
+            <div class="diagnosis-text">${r.diagnosis}</div>
+        `;
+        rc.appendChild(item);
+    });
+
+    // CTA（占い師タイプなら講座を先に、波動調整タイプなら公式サイトを先に）
+    const ctaOfficial = `
+        <a class="cta-card secondary" href="https://re-life123.site/" target="_blank" rel="noopener">
+            <div class="cta-check">⚠ 要チェック</div>
+            <div class="cta-title">波動・チャクラ調整 公式サイト</div>
+            <div class="cta-desc">遠隔ヒーリング・スピリチュアル瞑想指導</div>
+            <span class="cta-arrow">公式サイトを見る →</span>
+        </a>`;
+    const ctaTarot = `
+        <a class="cta-card primary" href="https://re-life123.site/ad/" target="_blank" rel="noopener">
+            <div class="cta-check">⚠ 要チェック</div>
+            <div class="cta-title">無料の波動タロット通信講座のご案内</div>
+            <div class="cta-desc">直感やチャクラの感度を「技術」として磨きたい方のための講座です。</div>
+            <span class="cta-arrow">講座の詳細を見る →</span>
+        </a>`;
+    const ctaHado = `
+        <a class="cta-card secondary" href="https://peroperocandy0607-collab.github.io/hado-fukuoka/" target="_blank" rel="noopener">
+            <div class="cta-check">⚠ 要チェック</div>
+            <div class="cta-title">波動・チャクラ調整指南</div>
+            <div class="cta-desc">遠隔ヒーリング×瞑想指導の詳しい内容はこちら。</div>
+            <span class="cta-arrow">詳しく見る →</span>
+        </a>`;
+    document.getElementById('cta-container').innerHTML = verdict.type === 'fortune'
+        ? ctaTarot + ctaOfficial + ctaHado
+        : ctaOfficial + ctaTarot + ctaHado;
+
+    showScreen('result-screen');
+    window.scrollTo(0, 0);
+}
+
+function buildRadarSVG(data, labels, colors) {
+    const size = 420, cx = size / 2, cy = size / 2, radius = size / 2 - 60, max = 10, n = data.length;
+    const angle = i => -Math.PI / 2 + i * (2 * Math.PI / n);
+    const pt = (val, i) => {
+        const r = (val / max) * radius;
+        return [cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))];
+    };
+    let grid = '';
+    for (let ring = 1; ring <= 5; ring++) {
+        const r = radius * (ring / 5);
+        const pts = [];
+        for (let i = 0; i < n; i++) pts.push([cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))]);
+        grid += `<polygon points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="#ececec" stroke-width="1"/>`;
+    }
+    let axes = '';
+    for (let i = 0; i < n; i++) {
+        const [x, y] = pt(max, i);
+        axes += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#ececec" stroke-width="1"/>`;
+    }
+    const dataPts = data.map((v, i) => pt(v, i));
+    const dataPoly = `<polygon points="${dataPts.map(p => p.join(',')).join(' ')}" fill="#b8935a" fill-opacity="0.15" stroke="#b8935a" stroke-width="2"/>`;
+    let dots = '';
+    dataPts.forEach((p, i) => {
+        dots += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="${colors[i]}" stroke="#fff" stroke-width="1.5"/>`;
+    });
+    let labelEls = '';
+    for (let i = 0; i < n; i++) {
+        const lr = radius + 28;
+        const x = cx + lr * Math.cos(angle(i));
+        const y = cy + lr * Math.sin(angle(i));
+        let anchor = 'middle';
+        if (x < cx - 5) anchor = 'end'; else if (x > cx + 5) anchor = 'start';
+        labelEls += `<text x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle" font-size="12" fill="#2b2b2b" font-weight="600">${labels[i]}</text>`;
+    }
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
+        ${grid}${axes}${dataPoly}${dots}${labelEls}
+    </svg>`;
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function getSummaryText() {
+    let s = '';
+    Object.keys(results).forEach(k => { s += `${CHAKRA_INFO[k].name}: YES ${results[k].yesCount}個\n`; });
+    return s;
+}
+
+function shareTwitter() {
+    const text = `私の波動チャクラ診断結果！\n\n${getSummaryText()}\n#波動チャクラ診断`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(location.href)}`, '_blank');
+}
+function shareLine() {
+    const text = `私の波動チャクラ診断結果！\n${getSummaryText()}`;
+    window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text + '\n' + location.href)}`, '_blank');
+}
+function shareInstagram() {
+    alert('Instagramへは、スクリーンショットを撮ってストーリーズでシェアしてください！');
+}
+</script>
+</body>
+</html>
